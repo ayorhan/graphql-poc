@@ -11,19 +11,19 @@ let usersData = [
 ];
 
 let hobbiesData = [
-    {id: '1', title: 'hobby1', profession: 'desc1'},
-    {id: '13', title: 'hobby2', profession: 'desc2'},
-    {id: '211', title: 'hobby3', profession: 'desc3'},
-    {id: '19', title: 'hobby4', profession: 'desc4'},
-    {id: '150', title: 'hobby5', profession: 'desc5'},
+    {id: '1', title: 'hobby1', profession: 'desc1', userId: '150'},
+    {id: '2', title: 'hobby2', profession: 'desc2', userId: '211'},
+    {id: '3', title: 'hobby3', profession: 'desc3', userId: '211'},
+    {id: '4', title: 'hobby4', profession: 'desc4', userId: '13'},
+    {id: '5', title: 'hobby5', profession: 'desc5', userId: '150'},
 ]
 
-let postData = [
-    {id: '1', comment: 'comment1'},
-    {id: '13', comment: 'comment2'},
-    {id: '211', comment: 'comment3'},
-    {id: '19', comment: 'comment4'},
-    {id: '150', comment: 'comment5'},
+let postsData = [
+    {id: '1', comment: 'comment1', userId: '1'},
+    {id: '2', comment: 'comment2', userId: '1'},
+    {id: '3', comment: 'comment3', userId: '19'},
+    {id: '4', comment: 'comment4', userId: '211'},
+    {id: '5', comment: 'comment5', userId: '1'},
 ]
 // Create types
 const UserType = new graphql.GraphQLObjectType({
@@ -44,6 +44,12 @@ const HobbyType = new graphql.GraphQLObjectType({
         id: {type: graphql.GraphQLString},
         title: {type: graphql.GraphQLString},
         description: {type: graphql.GraphQLString},
+        user: {
+            type: UserType,
+            resolve(parent, args){
+                return _.find(usersData, {id: parent.userId})
+            }
+        }
     })
 });
 
@@ -53,6 +59,12 @@ const PostType = new graphql.GraphQLObjectType({
     fields: () => ({
         id: {type: graphql.GraphQLString},
         comment: {type: graphql.GraphQLString},
+        user: {
+            type: UserType,
+            resolve(parent, args){
+                return _.find(usersData, {id: parent.userId})
+            }
+        }
     })
 });
 
@@ -93,7 +105,7 @@ const RootQuery = new graphql.GraphQLObjectType({
                 }
             },
             resolve(parent, args){
-                return _.find(postData, {id: args.id})
+                return _.find(postsData, {id: args.id})
             }
         }
     }) 
