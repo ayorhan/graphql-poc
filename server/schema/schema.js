@@ -33,7 +33,19 @@ const UserType = new graphql.GraphQLObjectType({
         id: {type: graphql.GraphQLString},
         name: {type: graphql.GraphQLString},
         age: {type: graphql.GraphQLInt},
-        profession: {type: graphql.GraphQLString}
+        profession: {type: graphql.GraphQLString},
+        posts: {
+            type: graphql.GraphQLList(PostType),
+            resolve(parent, args){
+                return _.filter(postsData, {userId: parent.id})
+            } 
+        },
+        hobbies: {
+            type: graphql.GraphQLList(HobbyType),
+            resolve(parent, args){
+                return _.filter(hobbiesData, {userId: parent.id})
+            } 
+        }
     })
 });
 
