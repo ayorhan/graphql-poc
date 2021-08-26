@@ -147,6 +147,46 @@ const Mutation = new graphql.GraphQLObjectType({
                 return user;
             }
         },
+        updateUser: {
+            type: UserType,
+            args: {
+                id: {type: new graphql.GraphQLNonNull(graphql.GraphQLID)},
+                name: {type: new graphql.GraphQLNonNull(graphql.GraphQLString)},
+                age: {type: graphql.GraphQLInt},
+                profession: {type: graphql.GraphQLString}
+            },
+            resolve(parent, args){
+                return User.findByIdAndUpdate(
+                    args.id, 
+                    {
+                        $set: {
+                            name: args.name,
+                            age: args.age,
+                            profession: args.profession
+                        }
+                    },
+                    {
+                      new: true // send back the updated object 
+                    }
+                
+                );
+            }
+        },
+        removeUser: {
+            type: UserType,
+            args: {
+                id: {type: new graphql.GraphQLNonNull(graphql.GraphQLString)}
+            },
+            resolve(parent, args){
+                let removedUser = User.findByIdAndRemove(args.id).exec();
+
+                if(!removedUser){
+                    throw new ("Error");
+                }
+
+                return removedUser;
+            }
+        },
         createPost: {
             type: PostType,
             args: {
@@ -162,6 +202,42 @@ const Mutation = new graphql.GraphQLObjectType({
                 post.save();
 
                 return post;
+            }
+        },
+        removePost: {
+            type: PostType,
+            args: {
+                id: {type: new graphql.GraphQLNonNull(graphql.GraphQLString)}
+            },
+            resolve(parent, args){
+                let removedPost = Post.findByIdAndRemove(args.id).exec();
+
+                if(!removedPost){
+                    throw new ("Error");
+                }
+
+                return removedPost;
+            }
+        },
+        updatePost: {
+            type: PostType,
+            args: {
+                id: {type: new graphql.GraphQLNonNull(graphql.GraphQLID)},
+                comment: {type: new graphql.GraphQLNonNull(graphql.GraphQLString)}
+            },
+            resolve(parent, args){
+                return Post.findByIdAndUpdate(
+                    args.id, 
+                    {
+                        $set: {
+                            comment: args.comment
+                        }
+                    },
+                    {
+                      new: true // send back the updated object 
+                    }
+                
+                );
             }
         },
         createHobby: {
@@ -182,7 +258,46 @@ const Mutation = new graphql.GraphQLObjectType({
 
                 return hobby;
             }
-        }
+        },
+        removeHobby: {
+            type: HobbyType,
+            args: {
+                id: {type: new graphql.GraphQLNonNull(graphql.GraphQLString)}
+            },
+            resolve(parent, args){
+                let removedHobby = Hobby.findByIdAndRemove(args.id).exec();
+
+                if(!removedHobby){
+                    throw new ("Error");
+                }
+
+                return removedHobby;
+            }
+        },
+        updateHobby: {
+            type: HobbyType,
+            args: {
+                id: {type: new graphql.GraphQLNonNull(graphql.GraphQLID)},
+                title: {type: new graphql.GraphQLNonNull(graphql.GraphQLString)},
+                description: {type: new graphql.GraphQLNonNull(graphql.GraphQLString)}
+
+            },
+            resolve(parent, args){
+                return Hobby.findByIdAndUpdate(
+                    args.id, 
+                    {
+                        $set: {
+                            title: args.title,
+                            description: args.description
+                        }
+                    },
+                    {
+                      new: true // send back the updated object 
+                    }
+                
+                );
+            }
+        },
     }
 })
 
